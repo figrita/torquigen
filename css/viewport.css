@@ -1,0 +1,83 @@
+#viewport {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 30%;
+    background-image: repeating-conic-gradient(#444 0% 25%, transparent 0% 50%);
+    background-size: 24px 24px;
+    background-color: #222;
+    overflow: hidden;
+}
+
+.viewport-controls {
+    color: #ddd;
+    background: rgb(0 0 0 / 50%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 10;
+    border-top-right-radius: 5px;
+}
+
+.viewport-controls .left-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 1rem;
+}
+
+.viewport-controls button {
+    width: 24px;
+    height: 24px;
+    color: #ccc;
+    margin-left: .5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    border: 1px solid #444;
+}
+
+.viewport-controls button:hover {
+    color: #fff;
+}
+
+#image-rendering {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+#viewport canvas {
+    position: absolute;
+    image-rendering: pixelated;
+}
+
+#hideshowtimeline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+    height: 2rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+#resize-viewport {
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    cursor: ns-resize;
+}

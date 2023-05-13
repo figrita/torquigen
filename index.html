@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link href="fonts/zilla-slab.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/save-modal.css" />
+    <link rel="stylesheet" href="css/export-modal.css" />
+    <link rel="stylesheet" href="css/timeline.css" />
+    <link rel="stylesheet" href="css/viewport.css" />
+    <link rel="stylesheet" href="css/icons.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+
+    <!-- Primary Meta Tags -->
+    <title>TorquiGen — Animated kaleidoscope for your images</title>
+    <meta name="title" content="TorquiGen — Animated kaleidoscope for your images">
+    <meta name="description" content="Create seamlessly looping animations of your own images, free, open-source">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://torquigen.app/">
+    <meta property="og:title" content="TorquiGen — Animated kaleidoscope for your images">
+    <meta property="og:description"
+        content="Create seamlessly looping animations of your own images, free, open-source">
+    <meta property="og:image"
+        content="https://torquigen.app/bluetorq.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://torquigen.app/">
+    <meta property="twitter:title" content="TorquiGen — Animated kaleidoscope for your images">
+    <meta property="twitter:description"
+        content="Create seamlessly looping animations of your own images, free, open-source">
+    <meta property="twitter:image"
+        content="https://torquigen.app/bluetorq.png">
+</head>
+
+<body>
+    <div id="sidebar" style="width: 17.6rem;">
+        <h1 class="header">TorquiGen</h1>
+        <img src="1f300.svg" alt="Cyclone" class="accent">
+        <div class="controls">
+            <span style="width: 19rem; text-align: right;">Click to Upload or Drop Image:</span>
+            <div id="drop-zone"><img id="input-image" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                    alt="Input Image" /></div>
+            <button id="save-load-open" style="margin:1rem 0;">Save / Load</button>
+        </div>
+        <div id="hideshow"><i class="gg-chevron-left"></i></div>
+        <div id="resize-sidebar">⬌</div>
+    </div>
+
+    <div class="workspace">
+        <div id="viewport" style="height: calc(100vh - 20rem);">
+            <canvas id="webgl-canvas" width="512" height="512"></canvas>
+            <div class="viewport-controls">
+                <span class="left-options">
+                    <label for="viewport-zoom-slider">🔍 Zoom</label>
+                    <input type="range" min="0.1" max="10" value="1" step="0.1" class="viewport-zoom-slider"
+                        id="viewport-zoom-slider"><span style="width: 3rem">1.0</span>
+                    <button class="viewport-zoom-reset">１</button>
+                    <button class="viewport-position-reset"><i class="gg-assign"></i></button>
+                    <select id="image-rendering">
+                        <option value="pixelated">Pixelated</option>
+                        <option value="auto">Auto</option>
+                    </select>
+                    <div id="hideshowtimeline"><i class="gg-chevron-down"></i></div>
+                </span>
+                <div id="resize-viewport">⬍</div>
+            </div>
+        </div>
+        <div class="timeline">
+            <div class="transport" id="transport">
+                <div class="transport-options">
+                    <span>
+                        <label for="loop-length">⏲️&#xFE0E; Length: </label>
+                        <select class="loop-length" id="loop-length">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5" selected>5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                            <option value="60">60</option>
+                            <option value="90">90</option>
+                            <option value="120">120</option>
+                            <option value="150">150</option>
+                            <option value="180">180</option>
+                            <option value="270">270</option>
+                            <option value="360">360</option>
+                        </select>
+                        (seconds)
+                    </span>
+                    <div class="transport-controls">
+                        <button class="btn" id="transport_begin"><i class="gg-play-track-prev-r"></i></button>
+                        <button class="btn" id="transport_play"><i class="gg-play-button-r"></i></button>
+                        <button class="btn" id="transport_stop"><i class="gg-play-stop-r"></i></button>
+                        <button class="btn" id="transport_pause"><i class="gg-play-pause-r"></i></button>
+                        <button class="btn" id="transport_end"><i class="gg-play-track-next-r"></i></button>
+                    </div>
+                    <span>
+                        <button id="export-animation" class="submit">🎬&#xFE0E;&nbsp;Export</button>
+                    </span>
+                </div>
+                <div class="transport-timeline">
+                    <input type="range" min="0" max="1" value="0" step=".001" class="timeline-slider"
+                        id="timeline-slider">
+                </div>
+            </div>
+            <div id="animation-tracks"></div>
+        </div>
+    </div>
+    <div id="export-modal">
+        <div class="export-content">
+            <form id="export-form">
+                <label for="frame-rate">📽&#xFE0E;&nbsp;FPS</label>
+                <select class="frame-rate" id="frame-rate">
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30" selected>30</option>
+                    <option value="60">60</option>
+                </select>
+                <label for="export-format">📦&#xFE0E;&nbsp;Format</label>
+                <select id="export-format">
+                    <option value="gif" selected>GIF</option>
+                    <option value="webm">Webm</option>
+                    <option value="png">PNG</option>
+                </select>
+                <input type="submit" id="export-submit" class="submit" value="🎬&#xFE0E;&nbsp;Export">
+                <button id="cancel-export" class="cancel">Cancel</button>
+            </form>
+            <div id="export-progress" style="display:none">
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <span class="progress-text" id="progress-text">Rendering...</span>
+                <button id="cancel-render" class="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="save-modal" style="display: none;">
+        <div id="save-content">
+            <label for="textarea-save">Save or Load as Text</label>
+            <textarea id="textarea-save"></textarea>
+            <span><button id="btn-save">Save</button><button id="btn-load">Load</button></span>
+            <div style="display: block; width: 100%; height: 1px; margin: 1rem 0; border-bottom: 1px dashed #fff;">
+            </div>
+            <label for="input-save-as">Save as File</label>
+            <span><input type="text" id="input-save-as" value="Untitled">.torq<button id="btn-save-as">Save
+                    As</button></span>
+            <br>
+            <label for="input-file-load">Load from File</label>
+            <span><input type="file" id="input-file-load" accept=".json, .torq"><button
+                    id="btn-file-load">Load</button></span>
+
+            <br>
+            <button id="btn-close" style="margin: 0 auto">Close</button>
+        </div>
+    </div>
+    <script src="js/ccapture/CCapture.js"></script>
+    <script src="js/ccapture/gif.js"></script>
+    <script src="js/ccapture/download.js"></script>
+    <script src="js/ccapture/tar.js"></script>
+    <script src="js/ccapture/webm-writer-0.3.0.js"></script>
+    <script src="js/panzoom/panzoom.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script type="module">
+        const checkBrowserAndRemoveOption = () => {
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            if (isSafari) {
+                const selectElement = document.querySelector('#export-format');
+                Array.from(selectElement?.options || [])
+                    .filter(option => option.value === "webm")
+                    .forEach(option => option.remove());
+            }
+        }
+
+        const resetValues = () => {
+            // Reset all input fields
+            Array.from(document.querySelectorAll('input:not(.lil-gui input)'))
+                .filter(input => input.type != 'button')
+                .forEach(input => input.value = input.defaultValue);
+
+            // Reset all textarea fields
+            Array.from(document.querySelectorAll('textarea:not(.lil-gui textarea)'))
+                .forEach(textarea => textarea.value = textarea.defaultValue);
+
+            // Reset all select dropdowns
+            Array.from(document.querySelectorAll('select:not(.lil-gui select)'))
+                .forEach(select => {
+                    const selectedOption = Array.from(select.options).find(option => option.defaultSelected);
+                    if (selectedOption) {
+                        select.value = selectedOption.value;
+                    } else if (select.options.length > 0) {
+                        // Select the first option if no option has the "selected" attribute
+                        select.options[0].selected = true;
+                    }
+                });
+
+            // Continue with existing onload functions if any
+            checkBrowserAndRemoveOption();
+        };
+
+        window.onload = resetValues;
+
+    </script>
+</body>
+
+</html>

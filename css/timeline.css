@@ -1,0 +1,164 @@
+/* TIMELINE */
+.workspace {
+    display: flex;
+    flex-direction: column;
+    flex: 3 0 0;
+    position: relative;
+}
+
+.timeline {
+    position: relative;
+    background-color: #111;
+    color: #eee;
+    border-top: 2px solid #000;
+    flex: 1 0 0;
+    overflow-y: scroll;
+}
+
+.timeline::-webkit-scrollbar {
+    /* width of the entire scrollbar */
+    width: 12px;
+}
+
+.timeline::-webkit-scrollbar-track {
+    /* color of the tracking area */
+    background: #111;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+    /* color of the scroll thumb */
+    background-color: #111;
+
+    /* roundness of the scroll thumb */
+    border-radius: 20px;
+
+    /* creates padding around scroll thumb */
+    border: 3px solid #333;
+
+}
+
+
+.timeline-content {
+    position: absolute;
+    inset: 0 2rem;
+}
+
+.transport {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(0deg, #000, #222);
+    z-index: 5;  /* Safari number spinner fix */
+}
+
+.transport-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 20px;
+    margin: 0 auto;
+    transform: scale(1.5);
+}
+
+.transport-controls .btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.transport-controls .btn:hover {
+    color: #bfb;
+}
+
+.transport-timeline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.timeline-slider {
+    appearance: none;
+    width: 40rem;
+    background: #333;
+    border-radius: 10px;
+    cursor: ew-resize;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #b55;
+    cursor: ew-resize;
+}
+
+.timeline-slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #b55;
+    cursor: ew-resize;
+}
+
+.transport-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 40px;
+    column-gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.transport-options span {
+    width: 20%;
+    text-align: center;
+}
+
+#animation-tracks {
+    width: 100%;
+    background-color: #333;
+}
+
+#animation-tracks div {
+    padding: 0.5rem;
+}
+
+#animation-tracks div:nth-child(even) {
+    background-color: #222;
+}
+
+#animation-tracks div span {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#animation-tracks div span input[type="number"]:focus {
+    outline: #cff solid thin;
+}
+
+
+#animation-tracks input::-webkit-outer-spin-button,
+#animation-tracks input::-webkit-inner-spin-button {
+    z-index: 4; /* Safari number spinner fix */
+}
+
+.inflection-point {
+    max-width: 100%;
+}

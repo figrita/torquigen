@@ -1,0 +1,28 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+
+:root {
+    color-scheme: dark;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    font-family: system-ui, sans-serif;
+    color: whitesmoke;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+input[type="number"] {
+    width: 5rem;
+}

@@ -1,0 +1,90 @@
+#sidebar {
+    position: relative;
+    z-index: 10;
+    background-color: #111;
+    min-width: 1.8rem;
+    max-width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#hideshow {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.8rem;
+    height: 10rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+#resize-sidebar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: ew-resize;
+}
+
+.header {
+    font-family: 'Zilla Slab', serif;
+    font-size: xx-large;
+    margin: 0;
+    position: absolute;
+    right: 2rem;
+    text-align: right;
+    line-height: 2rem;
+}
+
+.accent {
+    margin: 0;
+    position: absolute;
+    top: 0.2rem;
+    right: 0;
+    text-align: right;
+    width:1.8rem;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: absolute;
+    top: 4rem;
+    right: 1.8rem;
+    left: 0;
+    align-items: end;
+}
+
+#drop-zone {
+    min-width: 15rem;
+    width: calc(100% - 0.6rem);
+    border: 2px dashed #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-family: 'Zilla Slab', serif;
+}
+
+#drop-zone.dragover {
+    background-color: #444;
+}
+
+img#input-image {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 30vh;
+}
