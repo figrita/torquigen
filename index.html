@@ -57,11 +57,14 @@
                 <p>
                     TorquiGen is a free, open-source tool for creating animated kaleidoscopes from your own images.
                     <br><br>
-                    The <em>Controls</em> to the right allow you to change the many parameters that create the resulting image.
+                    The <em>Controls</em> to the right allow you to change the many parameters that create the resulting
+                    image.
                     <br><br>
-                    The timeline and automation tracks below the main viewport are used to overwrite <em>Controls</em> using smooth curves between values.
+                    The timeline and automation tracks below the main viewport are used to overwrite <em>Controls</em>
+                    using smooth curves between values.
                     <br><br>
-                    The <em>Save and Load Settings</em> button allows you to save your current settings to a file, and load them back in later.  These saves do not include input images.
+                    The <em>Save and Load Settings</em> button allows you to save your current settings to a file, and
+                    load them back in later. These saves do not include input images.
                 </p>
             </details>
             <a href="https://github.com/figrita/torquigen" style="text-decoration: none;">
@@ -222,6 +225,20 @@
             }
         }
 
+        function setDefaultAnimation() {
+            // Select the second row
+            let rows = document.querySelectorAll("#animation-tracks div");
+            let secondRow = rows[1]; // index is 0-based
+
+            // Click the enable button
+            let enableButton = secondRow.querySelector(".enabled");
+            enableButton.click();
+
+            // Set the inflection value to 0.7
+            let inflectionInput = secondRow.querySelector(".inflection-value");
+            inflectionInput.value = 0.7;
+        }
+
         const resetValues = () => {
             // Reset all input fields
             Array.from(document.querySelectorAll('input:not(.lil-gui input)'))
@@ -244,8 +261,8 @@
                     }
                 });
 
-            // Continue with existing onload functions if any
             checkBrowserAndRemoveOption();
+            setDefaultAnimation()
         };
 
         window.onload = resetValues;
