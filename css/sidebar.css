@@ -91,6 +91,7 @@ img#input-image {
 
 #sidebar details {
     margin-bottom: 2rem;
+    overflow: auto;
 }
 
 #sidebar details summary {
