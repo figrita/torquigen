@@ -31,6 +31,9 @@ export default class Viewport {
     this.hideshow.addEventListener('click', this.hideshowHandler);
     this.hideshow.addEventListener('touchstart', this.hideshowHandler);
     this.controls.addEventListener('touchstart', (e) => {e.stopPropagation()}, { passive: false });
+    this.controls.addEventListener('mousedown', (e) => {e.stopPropagation()}, { passive: false });
+    this.controls.addEventListener('click', (e) => {e.stopPropagation()}, { passive: false });
+    this.controls.addEventListener('dblclick', (e) => {e.stopPropagation()}, { passive: false });
   }
 
   zoomInput = (event) => {
