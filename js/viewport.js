@@ -1,53 +1,36 @@
 export default class Viewport {
-  constructor() {
-    this.wc = document.getElementById('webgl-canvas');
-    this.viewport = document.getElementById('viewport');
-    this.controls = document.querySelector('.viewport-controls');
-    this.rendering = document.getElementById('image-rendering');
-    this.wpz = panzoom(this.wc, {
-      maxZoom: 10,
-      minZoom: 0.1,
-      smoothScroll: false,
-      beforeMouseDown: this.beforeMouseDown.bind(this),
-      beforeClick: this.beforeClick.bind(this),
-    });
-    this.zoomSlider = document.getElementById('viewport-zoom-slider');
-    this.zoomReset = document.querySelector('.viewport-zoom-reset');
-    this.positionReset = document.querySelector('.viewport-position-reset');
-    this.resizeViewport = document.getElementById('resize-viewport');
-    this.hideshow = document.getElementById('hideshowtimeline');
-    this.saveHeight = 0;
+  wc = document.getElementById('webgl-canvas');
+  viewport = document.getElementById('viewport');
+  controls = document.querySelector('.viewport-controls');
+  rendering = document.getElementById('image-rendering');
+  wpz = panzoom(this.wc, {
+    maxZoom: 10,
+    minZoom: 0.1,
+    smoothScroll: false,
+  });
+  zoomSlider = document.getElementById('viewport-zoom-slider');
+  zoomReset = document.querySelector('.viewport-zoom-reset');
+  positionReset = document.querySelector('.viewport-position-reset');
+  resizeViewport = document.getElementById('resize-viewport');
+  hideshow = document.getElementById('hideshowtimeline');
+  saveHeight = 0;
 
+  constructor() {
     this.addEventListeners();
     this.createObserver();
   }
 
-  beforeMouseDown = (e) => {
-    const viewportRect = this.viewport.getBoundingClientRect();
-    let shouldIgnore = false;
-    if (e.clientX > viewportRect.right - 20 && e.clientY > viewportRect.bottom - 20) {
-      shouldIgnore = true;
-    }
-    if (this.controls.contains(e.target)) {
-      return true;
-    }
-    return shouldIgnore;
-  }
-
-  beforeClick = (e) => {
-    return this.beforeMouseDown(e);
-  }
-
   addEventListeners = () => {
-    this.zoomSlider.addEventListener('input', this.zoomInput.bind(this));
-    this.zoomReset.addEventListener('click', this.resetZoom.bind(this));
-    this.positionReset.addEventListener('click', this.resetPosition.bind(this));
-    this.wpz.on('zoom', this.zoomUpdate.bind(this));
-    this.rendering.addEventListener('change', this.changeRendering.bind(this));
+    this.zoomSlider.addEventListener('input', this.zoomInput);
+    this.zoomReset.addEventListener('click', this.resetZoom);
+    this.positionReset.addEventListener('click', this.resetPosition);
+    this.wpz.on('zoom', this.zoomUpdate);
+    this.rendering.addEventListener('change', this.changeRendering);
     this.resizeViewport.addEventListener('mousedown', this.resizeViewportHandler);
     this.resizeViewport.addEventListener('touchstart', this.resizeViewportTouchHandler);
-    this.hideshow.addEventListener('click', this.hideshowHandler.bind(this));
-    this.hideshow.addEventListener('touchstart', this.hideshowHandler.bind(this));
+    this.hideshow.addEventListener('click', this.hideshowHandler);
+    this.hideshow.addEventListener('touchstart', this.hideshowHandler);
+    this.controls.addEventListener('touchstart', (e) => {e.stopPropagation()}, { passive: false });
   }
 
   zoomInput = (event) => {
@@ -58,7 +41,7 @@ export default class Viewport {
     this.wpz.zoomAbs(x, y, event.target.value);
     this.zoomSlider.nextElementSibling.innerHTML = event.target.value;
   }
-  
+
   resetZoom = () => {
     const wcRect = this.wc.getBoundingClientRect();
     const parentRect = this.wc.parentElement.getBoundingClientRect();
@@ -75,7 +58,7 @@ export default class Viewport {
     this.wpz.smoothZoomAbs(x, y, 1);
     this.zoomSlider.nextElementSibling.innerHTML = '1.0';
   }
-  
+
   resetPosition = () => {
     const wcRect = this.wc.getBoundingClientRect();
     const parentRect = this.wc.parentElement.getBoundingClientRect();
@@ -83,53 +66,53 @@ export default class Viewport {
     const cy = parentRect.height / 2 - wcRect.height / 2;
     this.wpz.smoothMoveTo(cx, cy);
   }
-  
+
   zoomUpdate = (e) => {
     const value = (e.getTransform().scale).toFixed(1);
     this.zoomSlider.value = value;
     this.zoomSlider.nextElementSibling.innerHTML = value;
   }
-  
+
   changeRendering = (event) => {
     const { value } = event.target;
     this.wc.style.imageRendering = value;
   }
-  
-resizeViewportHandler = (e) => {
-  e.preventDefault();
-  this.offsetY = e.clientY - this.viewport.clientHeight;
-  document.addEventListener('mousemove', this.onMouseMoveViewport);
-  document.addEventListener('mouseup', this.onMouseUpViewport);
-};
 
-resizeViewportTouchHandler = (e) => {
-  e.preventDefault();
-  this.offsetY = e.touches[0].clientY - this.viewport.clientHeight;
-  document.addEventListener('touchmove', this.onTouchMoveViewport);
-  document.addEventListener('touchend', this.onTouchEndViewport);
-}
+  resizeViewportHandler = (e) => {
+    e.preventDefault();
+    this.offsetY = e.clientY - this.viewport.clientHeight;
+    document.addEventListener('mousemove', this.onMouseMoveViewport);
+    document.addEventListener('mouseup', this.onMouseUpViewport);
+  };
 
-  onMouseMoveViewport =  (e) => {
+  resizeViewportTouchHandler = (e) => {
+    e.preventDefault();
+    this.offsetY = e.touches[0].clientY - this.viewport.clientHeight;
+    document.addEventListener('touchmove', this.onTouchMoveViewport);
+    document.addEventListener('touchend', this.onTouchEndViewport);
+  }
+
+  onMouseMoveViewport = (e) => {
     const newHeight = e.clientY - this.offsetY;
     this.viewport.style.height = `${newHeight}px`;
   }
-  
+
   onTouchMoveViewport = (e) => {
     const newHeight = e.touches[0].clientY - this.offsetY;
     this.viewport.style.height = `${newHeight}px`;
   }
-  
+
   onMouseUpViewport = () => {
     document.removeEventListener('mousemove', this.onMouseMoveViewport);
     document.removeEventListener('mouseup', this.onMouseUpViewport);
   }
-  
+
   onTouchEndViewport = () => {
     document.removeEventListener('touchmove', this.onTouchMoveViewport);
     document.removeEventListener('touchend', this.onTouchEndViewport);
   }
-  
-  
+
+
   hideshowHandler = () => {
     const box = this.hideshow.getBoundingClientRect();
     this.viewport.style.transition = 'height 0.25s ease-in';
@@ -147,7 +130,7 @@ resizeViewportTouchHandler = (e) => {
       this.viewport.style.transition = '';
     };
   }
-  
+
   createObserver = () => {
     this.observer = new MutationObserver((mutations) => {
       mutations.forEach(() => {
@@ -159,19 +142,12 @@ resizeViewportTouchHandler = (e) => {
         }
       });
     });
-  
+
     const config = { attributes: true, attributeFilter: ['style'] };
     this.observer.observe(this.viewport, config);
   }
-  
-  enableBottomTouch = (parentDiv, childDiv, touchAreaHeight) => {
-    childDiv.addEventListener('touchstart', function(event) {
-      event.stopPropagation();
-    }, {passive: false});
-  }
-  
 
-  init = () =>  {
+  init = () => {
     const wcRect = this.wc.getBoundingClientRect();
     const parentRect = this.wc.parentElement.getBoundingClientRect();
     const cx = parentRect.width / 2 - wcRect.width / 2;
