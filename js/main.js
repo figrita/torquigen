@@ -1,7 +1,7 @@
 // ------------------------------
 // ----- 1. IMPORTS -------------
 // ------------------------------
-import * as viewport from './viewport.js';
+import Viewport from './viewport.js';
 import Sidebar from './sidebar.js';
 import Animator from './animator.js';
 import AnimationPlayer from './player.js';
@@ -47,6 +47,7 @@ const webglCanvas = document.getElementById('webgl-canvas'); // Canvas element
 const gl = webglCanvas.getContext('webgl2', { premultipliedAlpha: true, alpha: true, preserveDrawingBuffer: true }); // WebGL context
 const animator = new Animator(GUI_ITEMS, document.getElementById('animation-tracks'), controls);
 const player = new AnimationPlayer(animator, update, gl, document.getElementById('transport'));
+const viewport = new Viewport();
 const gui = new GUI();
 addGuiItems(gui, controls, GUI_ITEMS);
 gui.onChange(update);
