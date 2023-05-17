@@ -1,152 +1,150 @@
 export default class Sidebar {
+  hideshow = document.getElementById('hideshow');
+  sidebar = document.getElementById('sidebar');
+  saveWidth = 0;
+  resizeSidebar = document.getElementById('resize-sidebar');
+  offsetX = null;
+  dropZone = document.getElementById('drop-zone');
+  saveLoadButton = document.getElementById('save-load-open');
+  saveModal = document.getElementById('save-modal');
+
   constructor() {
     this.inputImage = null;
   }
 
   init(inputImage) {
-    // SIDE BAR HIDESHOW
-    const hideshow = document.getElementById('hideshow');
-    const sidebar = document.getElementById('sidebar');
-    let saveWidth = 0;
-    hideshow.addEventListener('click', () => {
-      const box = hideshow.getBoundingClientRect();
-      sidebar.style.transition = 'width 0.25s ease-in';
-      if (box.left <= 1) {
-        if (saveWidth > 0) {
-          sidebar.style.width = `${saveWidth}px`;
-        } else {
-          sidebar.style.width = '17.6rem';
-        }
-      } else {
-        saveWidth = sidebar.clientWidth;
-        sidebar.style.width = '0';
-      }
-      sidebar.ontransitionend = () => {
-        sidebar.style.transition = '';
-      };
+    this.inputImage = inputImage;
+    this.addEventListeners();
+    this.createObserver();
+  }
+
+  addEventListeners = () => {
+    this.hideshow.addEventListener('click', this.hideshowHandler);
+    this.resizeSidebar.addEventListener('mousedown', this.resizeSidebarHandler);
+    this.resizeSidebar.addEventListener('touchstart', this.resizeSidebarTouchHandler);
+    this.dropZone.addEventListener('click', this.triggerImageFileInput);
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      this.dropZone.addEventListener(eventName, this.preventDefaults, false);
     });
-    const observer = new MutationObserver((mutations) => {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      this.dropZone.addEventListener(eventName, () => this.dropZone.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      this.dropZone.addEventListener(eventName, () => this.dropZone.classList.remove('dragover'), false);
+    });
+    this.dropZone.addEventListener('drop', this.handleDrop, false);
+    this.saveLoadButton.addEventListener('click', this.showModal);
+  }
+
+  hideshowHandler = () => {
+    const box = this.hideshow.getBoundingClientRect();
+    this.sidebar.style.transition = 'width 0.25s ease-in';
+    if (box.left <= 1) {
+      if (this.saveWidth > 0) {
+        this.sidebar.style.width = `${this.saveWidth}px`;
+      } else {
+        this.sidebar.style.width = '17.6rem';
+      }
+    } else {
+      this.saveWidth = this.sidebar.clientWidth;
+      this.sidebar.style.width = '0';
+    }
+    this.sidebar.ontransitionend = () => {
+      this.sidebar.style.transition = '';
+    };
+  }
+
+  createObserver = () => {
+    const observer = new MutationObserver(mutations => {
       mutations.forEach(() => {
-        const box = hideshow.getBoundingClientRect();
+        const box = this.hideshow.getBoundingClientRect();
         if (box.left <= 1) {
-          hideshow.innerHTML = '<i class="gg-chevron-right"></i>';
+          this.hideshow.innerHTML = '<i class="gg-chevron-right"></i>';
         } else {
-          hideshow.innerHTML = '<i class="gg-chevron-left"></i>';
+          this.hideshow.innerHTML = '<i class="gg-chevron-left"></i>';
         }
       });
     });
     const config = { attributes: true, attributeFilter: ['style'] };
-    observer.observe(sidebar, config);
+    observer.observe(this.sidebar, config);
+  }
 
-    // RESIZE DRAG
-    const resizeSidebar = document.getElementById('resize-sidebar');
-    let offsetX;
+  resizeSidebarHandler = e => {
+    e.preventDefault();
+    this.offsetX = e.clientX - this.sidebar.clientWidth;
+    document.addEventListener('mousemove', this.onMouseMoveSidebar);
+    document.addEventListener('mouseup', this.onMouseUpSidebar);
+  }
 
-    function onMouseMoveSidebar(e) {
-      const newWidth = e.clientX - offsetX;
-      sidebar.style.width = `${newWidth}px`;
-    }
+  resizeSidebarTouchHandler = e => {
+    e.preventDefault();
+    this.offsetX = e.touches[0].clientX - this.sidebar.clientWidth;
+    document.addEventListener('touchmove', this.onTouchMoveSidebar);
+    document.addEventListener('touchend', this.onTouchEndSidebar);
+  }
 
-    function onTouchMoveSidebar(e) {
-      const newWidth = e.touches[0].clientX - offsetX;
-      sidebar.style.width = `${newWidth}px`;
-    }
+  onMouseMoveSidebar = e => {
+    const newWidth = e.clientX - this.offsetX;
+    this.sidebar.style.width = `${newWidth}px`;
+  }
 
-    function onMouseUpSidebar() {
-      document.removeEventListener('mousemove', onMouseMoveSidebar);
-      document.removeEventListener('mouseup', onMouseUpSidebar);
-    }
+  onTouchMoveSidebar = e => {
+    const newWidth = e.touches[0].clientX - this.offsetX;
+    this.sidebar.style.width = `${newWidth}px`;
+  }
 
-    function onTouchEndSidebar() {
-      document.removeEventListener('touchmove', onTouchMoveSidebar);
-      document.removeEventListener('touchend', onTouchEndSidebar);
-    }
+  onMouseUpSidebar = () => {
+    document.removeEventListener('mousemove', this.onMouseMoveSidebar);
+    document.removeEventListener('mouseup', this.onMouseUpSidebar);
+  }
 
-    function resizeSidebarHandler(e) {
-      e.preventDefault();
-      offsetX = e.clientX - sidebar.clientWidth;
-      document.addEventListener('mousemove', onMouseMoveSidebar);
-      document.addEventListener('mouseup', onMouseUpSidebar);
-    }
+  onTouchEndSidebar = () => {
+    document.removeEventListener('touchmove', this.onTouchMoveSidebar);
+    document.removeEventListener('touchend', this.onTouchEndSidebar);
+  }
 
-    function resizeSidebarTouchHandler(e) {
-      e.preventDefault();
-      offsetX = e.touches[0].clientX - sidebar.clientWidth;
-      document.addEventListener('touchmove', onTouchMoveSidebar);
-      document.addEventListener('touchend', onTouchEndSidebar);
-    }
+  triggerImageFileInput = () => {
+    const imageFileInput = this.createImageFileInput();
+    imageFileInput.click();
+  }
 
-    resizeSidebar.addEventListener('mousedown', resizeSidebarHandler);
-    resizeSidebar.addEventListener('touchstart', resizeSidebarTouchHandler);
-
-    // Dropzone
-
-    const dropZone = document.getElementById('drop-zone');
-
-    // Create a hidden file input element for images only
+  createImageFileInput = () => {
     const imageFileInput = document.createElement('input');
     imageFileInput.type = 'file';
     imageFileInput.accept = 'image/*'; // Accept only image files
     imageFileInput.style.display = 'none';
-
     document.body.appendChild(imageFileInput);
-
-    // Handle file input change events
     imageFileInput.addEventListener('change', () => {
       const file = imageFileInput.files[0];
-      handleFile(file);
+      this.handleFile(file);
     });
+    return imageFileInput;
+  }
 
-    // Add click event listener to drop zone
-    dropZone.addEventListener('click', () => {
-      // Trigger the file input dialog
-      imageFileInput.click();
-    });
+  preventDefaults = e => {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-
-    function preventDefaults(e) {
-      e.preventDefault();
-      e.stopPropagation();
+  handleFile = file => {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = event => {
+        this.inputImage.src = event.target.result;
+        console.log('Image loaded:', this.inputImage);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please drop an image file.');
     }
+  }
 
-    function handleFile(file) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          inputImage.src = event.target.result;
-          console.log('Image loaded:', inputImage);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert('Please drop an image file.');
-      }
-    }
+  handleDrop = e => {
+    const file = e.dataTransfer.files[0];
+    this.handleFile(file);
+  }
 
-    function handleDrop(e) {
-      const file = e.dataTransfer.files[0];
-      handleFile(file);
-    }
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
-      dropZone.addEventListener(eventName, preventDefaults, false);
-    });
-
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
-    });
-
-    ['dragleave', 'drop'].forEach((eventName) => {
-      dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
-    });
-
-    dropZone.addEventListener('drop', handleDrop, false);
-
-    // Save Load Open
-    const saveLoadButton = document.getElementById('save-load-open');
-    const saveModal = document.getElementById('save-modal');
-
-    saveLoadButton.addEventListener('click', () => {
-      saveModal.style.display = 'block';
-    });
+  showModal = () => {
+    this.saveModal.style.display = 'block';
   }
 }
